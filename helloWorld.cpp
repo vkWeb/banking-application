@@ -1,6 +1,7 @@
 void main()
 {
-cout<<"Hello Vivek!"<<endl;
+court<<"sfr";
+  
 cout<<"Add="<<add(45, 56);
 }
 
