@@ -1,11 +1,11 @@
 using namespace std;
 
-//Included files
+//Header files
 #include <iostream>
 #include <string>
-#include <cstdlib>
+#include <cstdlib> //stdlib is obselete
 
-//structures and objects
+//Structures for Initializing datamembers
 struct profile_details
 {
     string username;
@@ -15,13 +15,15 @@ struct profile_details
 
 //function declarations
 void welcome_screen(profile_details profile);
-void main_screen(profile_details profile);
+void main_screen();
 
-//start main()
+/*--------------------------------------------------------------------------------------------------------------------------------------------*/
+/*                                                              Start of main() fucntion                                                      */
+/*--------------------------------------------------------------------------------------------------------------------------------------------*/
 int main()
 {
-    //welcome_screen(profile);
-    main_screen(profile);
+    welcome_screen(profile);
+    main_screen();
     return 0;
 }
 
@@ -34,9 +36,9 @@ void welcome_screen(profile_details profile)
     cout << "\nInstructions:";
     cout << "\n------------";
     cout << "\n-> Here, you'll be setting up your profile as a banking officer.\n-> Your username can consist of alphanumeric characters and your Password must be atleast 6 characters long.\n-> Fields marked with '*' are necessary.";
-    cout << "\n\n\n1. Enter Your Username*: ";
+    cout << "\n\n1. Enter Username*: ";
     cin >> profile.username;
-    cout << "\n2. Enter Your Password*: ";
+    cout << "2. Enter Password*: ";
 
     do
     {
@@ -48,16 +50,16 @@ void welcome_screen(profile_details profile)
         count++;
     } while (profile.pass.length() < 6);
 
-    cout << "\n3. Enter Your Email Address*: ";
+    cout << "3. Enter Email Address*: ";
     cin >> profile.email;
-    cout << "\n\nVerifying details...Now, you're ready to go! Please, Press 'Enter' to continue." << endl;
+    cout << "\nVerifying your details...\nNow, You're ready to go :)! Press 'Enter' to continue." << endl;
     cin.ignore();
     cin.ignore();
     system("clear");
 }
 
 //main_screen function()
-void main_screen(profile_details profile)
+void main_screen()
 {
     cout << "\t\t\t\t\t\t\t\t\t Home Screen\n\t\t\t\t\t\t\t\tBanking Humantics Version 1.0";
     cout << "\n------------";
