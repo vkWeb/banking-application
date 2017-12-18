@@ -22,7 +22,7 @@ struct profile_details
 char name[32]; //customer's name
 
 //function declarations
-int random_num(); //random balance generator
+int random_num();     //random balance generator
 char confirm(char a); //confirmation screen for yes, no and quit
 char checker(char a); //back button checker
 void welcome_screen(profile_details profile);
@@ -58,7 +58,7 @@ void welcome_screen(profile_details profile)
     cout << "\nInstructions:";
     cout << "\n------------";
     cout << "\n• Here, you'll be setting up your profile as a banking officer.\n• Your username can consist of alphanumeric characters and your Password must be atleast 6 characters long.\n• Fields marked with '*' are necessary. \n• IMPORTANT: Strictly Follow the ethics of datatypes otherwise you'll be punished with a crash of the whole system.";
-    cout << "\n\n-> Enter User name*: ";
+    cout << "\n\n-> Enter Username*: ";
     cin >> profile.username;
     cout << "-> Enter Password*: ";
 
@@ -109,11 +109,11 @@ void home_screen()
     cout << "\nb) Close a bank account. \t\t\tb) Fund transfer to another account of same bank - Intra Banking Transfer.";
     cout << "\nc) Get your Account statement or balance. \tc) Fund transfer to another account of different bank - Inter Banking Transfer.";
 
-    cout << "\n\n3. Loan Services: \t\t\t\t4.Customer Care, Support and Helpdesk: ";
-    cout << "\na) Startup Buisness Loan.\t\t\ta)Account issues.";
-    cout << "\nb) Loan for girl education.\t\t\tb)Debit or Credit Card issues.";
-    cout << "\nc) Loan for farmers. \t\t\t\tc)Net banking issues.";
-    cout << "\nd) Indian citizen loan. \t\t\td)Other support.";
+    cout << "\n\n3. Loan Services: \t\t\t\t4. Customer Care, Support and Helpdesk: ";
+    cout << "\na) Startup Buisness Loan.\t\t\ta) Account issues.";
+    cout << "\nb) Loan for girl education.\t\t\tb) Debit or Credit Card issues.";
+    cout << "\nc) Loan for farmers. \t\t\t\tc) Net banking issues.";
+    cout << "\nd) Indian citizen loan. \t\t\td) Other support.";
     cout << "\n\n-> Please enter your choice between ['1'] to ['4'] OR ['Q'] to Quit: ";
 
     do
@@ -288,11 +288,11 @@ void loan()
         cout << "\n• Formalities Required: Your business documents.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
         cin >> a;
-        if (a == 'h' || a == 'H')
+        if (confirm(a) == 'n' || confirm(a) == 'N')
         {
-            home_screen();
+            loan();
         }
-        else if (a == 'y' || a == 'Y')
+        else if (confirm(a) == 'y' || confirm(a) == 'Y')
         {
             long num = 0;
             double amt;
@@ -333,11 +333,11 @@ void loan()
         cout << "\n• Formalities Required: Your aaadhar card and school documents.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
         cin >> a;
-        if (a == 'h' || a == 'H')
+        if (confirm(a) == 'n' || confirm(a) == 'N')
         {
-            home_screen();
+            loan();
         }
-        else if (a == 'y' || a == 'Y')
+        else if (confirm(a) == 'y' || confirm(a) == 'Y')
         {
             long num = 0;
             double amt;
@@ -377,11 +377,11 @@ void loan()
         cout << "\n• Formalities Required: Your land documents and PAN/aaadhar card.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
         cin >> a;
-        if (a == 'h' || a == 'H')
+        if (confirm(a) == 'n' || confirm(a) == 'N')
         {
-            home_screen();
+            loan();
         }
-        else if (a == 'y' || a == 'Y')
+        else if (confirm(a) == 'y' || confirm(a) == 'Y')
         {
             long num = 0;
             double amt;
@@ -414,19 +414,32 @@ void loan()
 
     case 'd':
     {
+        int years = 0;
+        int counter = 0;
+        cout << "Enter the time period of the loan (in years): ";
+        cin >> years;
+        do
+        {
+            if (counter > 0)
+            {
+                cout << "Sorry! The time period exceeded the limit of 8 years, please re-enter: ";
+                cin >> years;
+            }
+            counter++;
+        } while (years > 8);
         string acc;
         cout << "\n\n• Loan Scheme: Citizens Loan.";
         cout << "\n• Interest: 8% compound interest.";
-        cout << "\n• Time Period: Three years.";
-        cout << "\n• Penalty: No Penalty.";
+        cout << "\n• Time Period: " << years << " years.";
+        cout << "\n• Penalty: Property will be mortgaged.";
         cout << "\n• Formalities Required: PAN/aaadhar card.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
         cin >> a;
-        if (a == 'h' || a == 'H')
+        if (confirm(a) == 'n' || confirm(a) == 'N')
         {
-            home_screen();
+            loan();
         }
-        else if (a == 'y' || a == 'Y')
+        else if (confirm(a) == 'y' || confirm(a) == 'Y')
         {
             long num = 0;
             double amt;
@@ -435,7 +448,7 @@ void loan()
             valid_acc_num(num);
             cout << "\nEnter the amount of loan: ";
             cin >> amt;
-            cout << "\nAmount to be paid back within 2 years: Rs. " << amt * pow(1.08, 3);
+            cout << "\nAmount to be paid back within 2 years: Rs. " << amt * pow(1.08, years);
             cout << "\n-> Press ['Y'] to confirm OR ['N'] to cancel, cancelling will shift you to the homescreen: ";
             cin >> a;
             if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
@@ -480,11 +493,11 @@ void Care()
     bool test = true;
     char a;
     system("clear");
-    cout << "\n\n4.Customer Care, Support and Helpdesk: ";
-    cout << "\na)Account issues.";
-    cout << "\nb)Debit or Credit Card issues.";
-    cout << "\nc)Net banking issues.";
-    cout << "\nd)Other support.";
+    cout << "\n\n4. Customer Care, Support and Helpdesk: ";
+    cout << "\na) Account issues.";
+    cout << "\nb) Debit or Credit Card issues.";
+    cout << "\nc) Net banking issues.";
+    cout << "\nd) Other support.";
     cout << "\n\n-> Please enter your choice between 'a', 'b', 'c' or 'd' OR Press ['H'] to go back to the home screen: ";
     cin >> a;
     if (a == 'h' || a == 'H')
@@ -659,7 +672,7 @@ void valid_acc_num(long a)
         }
         if (digit < 10)
         {
-            cout << "\nNote: Your Input must be atleast 10 numerals long: ";
+            cout << "\nYour Input must be *EXACTLY* 10 numerals long otherwise you'll be severely punished with a System crash: ";
             cin >> a;
         }
     } while (digit < 10);
@@ -672,11 +685,11 @@ char confirm(char a)
     {
         if (count > 0)
         {
-            cout << "\nSorry, Wrong Input Received! Press ['Y'] to continue OR ['N'] to re-enter the details OR ['Q'] to quit: ";
+            cout << "\nSorry, Wrong Input Received!: ";
             cin >> a;
         }
         count++;
-    } while ((a != 'y' && a != 'Y') && (a != 'n' && a != 'N') && (a != 'q' && a != 'Q'));
+    } while ((a != 'y' && a != 'Y') && (a != 'n' && a != 'N') && (a != 'q' && a != 'Q') && (a != 'h' && a != 'H'));
     return a;
 }
 

@@ -9,6 +9,7 @@
     "initializer_list": "cpp",
     "cstdio": "cpp",
     "cstdlib": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "ctime": "cpp"
   }
 }
