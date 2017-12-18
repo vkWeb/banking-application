@@ -74,7 +74,7 @@ void welcome_screen(profile_details profile)
 
     cout << "-> Enter Email Address*: ";
     cin >> profile.email;
-    cout << "\n-> You won't be able to change the user name or password due to security reasons corporated by SBI systems. Are you sure you want to continue? Press ['Y'] to continue OR ['N'] to re-enter the details OR ['Q'] to quit: ";
+    cout << "\n-> You won't be able to change the user name or password later due to security reasons corporated by SBI systems. Are you sure you want to continue? Press ['Y'] to continue OR ['N'] to re-enter the details OR ['Q'] to quit: ";
     cin >> a;
     if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
     {
@@ -196,6 +196,7 @@ void customer()
     case 'a':
     {
         int a;
+        long b;
         cout << "• To open a bank account you'll need to provide your name, age, date of birth and aadhar card details.";
         cout << "\n-> Enter your name: ";
         gets(name);
@@ -205,7 +206,8 @@ void customer()
         cout << "\n-> Enter your DOB: ";
         cin >> a;
         cout << "\n-> Enter your aadhar card number: ";
-        cin >> a;
+        cin >> b;
+        valid_acc_num(b);
         cout << "\nAccount created. You'll get the details along with your passbook delivered to the registered address in your aadhar card within few days.";
         break;
     }
@@ -388,7 +390,7 @@ void loan()
             valid_acc_num(num);
             cout << "\nEnter the amount of loan: ";
             cin >> amt;
-            cout << "\nAmount to be paid back within 2 years: Rs. " << (amt * 4.5 * 2) / 100;
+            cout << "\nAmount to be paid back within 2 years: Rs. " << amt + ((amt * 4.5 * 2) / 100);
             cout << "\n-> Press ['Y'] to confirm OR ['N'] to cancel, cancelling will shift you to the homescreen: ";
             cin >> a;
             if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
@@ -657,7 +659,7 @@ void valid_acc_num(long a)
         }
         if (digit < 10)
         {
-            cout << "\nNote: Your Account Number must be atleast 10 numerals long: ";
+            cout << "\nNote: Your Input must be atleast 10 numerals long: ";
             cin >> a;
         }
     } while (digit < 10);
