@@ -7,6 +7,8 @@
     "istream": "cpp",
     "string": "cpp",
     "initializer_list": "cpp",
-    "cstdio": "cpp"
+    "cstdio": "cpp",
+    "cstdlib": "cpp",
+    "cmath": "cpp"
   }
 }
