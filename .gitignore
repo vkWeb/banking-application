@@ -30,3 +30,5 @@ $RECYCLE.BIN/
 *.lnk
 
 main.exe
+sandbox.cpp
+

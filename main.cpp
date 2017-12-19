@@ -1,8 +1,17 @@
 using namespace std;
 
 /*
-Following latest C++ Standard and Using Latest header files provided by MingGW.
+Date: 20/12/17.
+
+            OBJECTIVES                                                        STATUS
+
+1. Refactor the whole source code.                                    On the way - 20% Done.
+2. Document the code.                                                 On the way - 10% Done.
+3. Resolve homescreen bug.                                                  Not Started.
+4. Changing the whole Input mechanism.                                    Not Started.
+5. Add password protection in transactions.                               Not Started.
 */
+
 //Header files
 #include <iostream>
 #include <string>
@@ -11,80 +20,84 @@ Following latest C++ Standard and Using Latest header files provided by MingGW.
 #include <cmath>
 
 //Structures for Initializing datamembers
-struct profile_details
+struct ProfileDetails
 {
-    string username; //bank operator's name
-    string pass;
-    string email;
-} profile;
+    string username; //Bank operator's name
+    string pass;     //Bank operator's password
+    string email;    //Bank operator's email
+} Profile;
 
-//global variables
-char name[32]; //customer's name
+//Global datamembers
+char Input;         //For Accepting user input used throughout the code.
+int Counter;        //Act as a counter of loops.
+long AccountNumber; //For Accepting account number used throughout the code.
 
-//function declarations
-int random_num();     //random balance generator
-char confirm(char a); //confirmation screen for yes, no and quit
-char checker(char a); //back button checker
-void welcome_screen(profile_details profile);
-void home_screen();
-void customer();
-void valid_acc_num(long a);
-void loan();
-void Care();
+//Function declarations
+void WelcomeScreen(ProfileDetails Profile);
+void HomeScreen();
+void Customer();
 void Transaction();
+void Loan();
+void Care();
 
-/*
--------------------------------------------------------------------------------------------------------------------
-                                        Start of main() fucntion                                              
--------------------------------------------------------------------------------------------------------------------
-*/
+int RandomBalance();              //Random balance generator
+char Confirm(char GetInput);      //Confirmation screen for yes, no, quit and home.
+char BackCheck(char GetInput);    //Back button checker for quit and home only.
+void ValidAccNum(long GetAccNum); //Account number validator
 
+/* Start of main() */
 int main()
 {
     system("clear");
-    welcome_screen(profile);
-    home_screen();
+
+    //Initializing datamembers to zero for reducing chances of bugs.
+    Counter = Input = AccountNumber = 0;
+
+    WelcomeScreen(Profile);
+    HomeScreen();
     return 0;
 }
 
-//welcome screen
-void welcome_screen(profile_details profile)
+//Welcome Screen - The screen user interacts with for the first time.
+void WelcomeScreen(ProfileDetails Profile)
 {
     system("clear");
-    int count = 0;
-    char a;
     cout << "\t\t\t\t\t\t\t\t\tWelcome Employee!\n\t\t\t\t\t\tBanking Humantics Version 1.0 By Yash, Sukhprit Paaji and Vivek.";
     cout << "\n------------";
     cout << "\nInstructions:";
     cout << "\n------------";
     cout << "\n• Here, you'll be setting up your profile as a banking officer.\n• Your username can consist of alphanumeric characters and your Password must be atleast 6 characters long.\n• Fields marked with '*' are necessary. \n• IMPORTANT: Strictly Follow the ethics of datatypes otherwise you'll be punished with a crash of the whole system.";
     cout << "\n\n-> Enter Username*: ";
-    cin >> profile.username;
+    cin >> Profile.username;
     cout << "-> Enter Password*: ";
 
+    //Password validator - makes sure that there are six characters in the password.
     do
     {
-        if (count > 0)
+        if (Counter > 0)
         {
             cout << ":( Sorry! Your Password must be atleast six characters, please try again: ";
         }
-        cin >> profile.pass;
-        count++;
-    } while (profile.pass.length() < 6);
+        cin >> Profile.pass;
+        Counter++;
+    } while (Profile.pass.length() < 6);
+    Counter = 0;
 
     cout << "-> Enter Email Address*: ";
-    cin >> profile.email;
+    cin >> Profile.email;
     cout << "\n-> You won't be able to change the user name or password later due to security reasons corporated by SBI systems. Are you sure you want to continue? Press ['Y'] to continue OR ['N'] to re-enter the details OR ['Q'] to quit: ";
-    cin >> a;
-    if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
+    cin >> Input;
+
+    //Validating user input.
+    if ((Confirm(Input) == 'y') || (Confirm(Input) == 'Y'))
     {
-        cout << "\nVerifying Your Details...\nNow, You're ready to go :) \n-> Press ['Enter'] to continue." << endl;
+        cout << "\nYou're ready to go :) \n-> Press ['Enter'] to continue.";
         cin.ignore();
         cin.ignore();
     }
-    else if ((confirm(a) == 'n') || (confirm(a) == 'N'))
+    else if ((Confirm(Input) == 'n') || (Confirm(Input) == 'N'))
     {
-        welcome_screen(profile);
+        WelcomeScreen(Profile);
     }
     else
     {
@@ -92,11 +105,11 @@ void welcome_screen(profile_details profile)
     }
 }
 
-//home_screen function()
-void home_screen()
+//HomeScreen function()
+void HomeScreen()
 {
     system("clear");
-    char a;
+
     bool test = true;
     cout << "\t\t\t\t\t\t\t\t\tHome Screen\n\t\t\t\t\tBanking Humantics Version 1.0 By Yash, Sukhprit Paaji and Vivek.";
     cout << "\n------------";
@@ -116,22 +129,23 @@ void home_screen()
     cout << "\nd) Indian citizen loan. \t\t\td) Other support.";
     cout << "\n\n-> Please enter your choice between ['1'] to ['4'] OR ['Q'] to Quit: ";
 
+    //Validating user input and prompting if input is wrong.
     do
     {
-        cin >> a;
+        cin >> Input;
 
-        test = (((a == 'q') || (a == 'Q')) || ((a >= '1') && (a <= '4'))) ? true : false;
+        test = (((Input == 'q') || (Input == 'Q')) || ((Input >= '1') && (Input <= '4'))) ? true : false;
         if (test == false)
         {
-            cout << "Re-enter your choice between 1 to 4 OR ['Q'].";
+            cout << "-> Wrong Input Received! Please Re-enter your choice between ['1'] to ['4'] OR ['Q'] to Quit:";
         }
     } while (test == false);
 
-    switch (a)
+    switch (Input)
     {
     case '1':
     {
-        customer();
+        Customer();
         break;
     }
     case '2':
@@ -141,7 +155,7 @@ void home_screen()
     }
     case '3':
     {
-        loan();
+        Loan();
         break;
     }
     case '4':
@@ -161,98 +175,92 @@ void home_screen()
     }
     default:
         cout << "Something looks wrong.";
-        home_screen();
+        HomeScreen();
     }
 }
 
-void customer()
+void Customer()
 {
     system("clear");
-    char a;
     bool test = true;
     cout << "1. Customer Centric Services: ";
     cout << "\na) Open an bank account.";
     cout << "\nb) Close a bank account.";
     cout << "\nc) Get your Account statement or balance.";
     cout << "\n\n-> Please enter your choice between 'a', 'b' or 'c' OR Press ['H'] to go back to the home screen: ";
-    cin >> a;
-    if (a == 'h' || a == 'H')
+    cin >> Input;
+    if (Input == 'h' || Input == 'H')
     {
-        home_screen();
+        HomeScreen();
     }
 
     do
     {
-        test = (a >= 'a' && a <= 'c') ? true : false;
+        test = (Input >= 'a' && Input <= 'c') ? true : false;
         if (test == false)
         {
             cout << "Re-enter your choice between 'a' to 'c': ";
-            cin >> a;
+            cin >> Input;
         }
     } while (test == false);
 
-    switch (a)
+    switch (Input)
     {
     case 'a':
     {
-        int a;
-        long b;
+        string name; //customer's name
         cout << "• To open a bank account you'll need to provide your name, age, date of birth and aadhar card details.";
         cout << "\n-> Enter your name: ";
-        gets(name);
-        gets(name);
+        getline(cin, name);
         cout << "\n-> Enter your age: ";
-        cin >> a;
+        cin >> Input;
         cout << "\n-> Enter your DOB: ";
-        cin >> a;
+        cin >> Input;
         cout << "\n-> Enter your aadhar card number: ";
-        cin >> b;
-        valid_acc_num(b);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\nAccount created. You'll get the details along with your passbook delivered to the registered address in your aadhar card within few days.";
         break;
     }
 
     case 'b':
     {
-        long num = 0;
         cout << "\nEnter your account number: ";
-        cin >> num;
-        valid_acc_num(num);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\n:( Account Closed!";
         break;
     }
 
     case 'c':
     {
-        long num = 0;
         cout << "Enter your account number: ";
-        cin >> num;
-        valid_acc_num(num);
-        cout << "\nBalance = " << random_num();
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
+        cout << "\nBalance = " << RandomBalance();
         break;
     }
 
     default:
         cout << "\nSomething looks wrong. We're shifting you to the homescreen.";
-        home_screen();
+        HomeScreen();
     }
 
     cout << "\n\n\nPress ['H'] to go back to the home screen OR ['A'] to load the screen again: ";
-    cin >> a;
-    if (checker(a) == 'A' || checker(a) == 'a')
+    cin >> Input;
+    if (BackCheck(Input) == 'A' || BackCheck(Input) == 'a')
     {
-        customer();
+        Customer();
     }
     else
     {
-        home_screen();
+        HomeScreen();
     }
 }
 
-void loan()
+void Loan()
 {
     system("clear");
-    char a;
     bool test = true;
     cout << "\n3. Loan Services: ";
     cout << "\na) Startup Buisness Loan.";
@@ -260,64 +268,62 @@ void loan()
     cout << "\nc) Loan for farmers.";
     cout << "\nd) Indian citizen loan.";
     cout << "\n\n-> Please enter your choice between 'a', 'b', 'c' or 'd' OR Press ['H'] to go back to the home screen: ";
-    cin >> a;
-    if (a == 'h' || a == 'H')
+    cin >> Input;
+    if (Input == 'h' || Input == 'H')
     {
-        home_screen();
+        HomeScreen();
     }
 
     do
     {
-        test = (a >= 'a' && a <= 'd') ? true : false;
+        test = (Input >= 'a' && Input <= 'd') ? true : false;
         if (test == false)
         {
             cout << "\nRe-enter your choice between 'a' to 'd': ";
-            cin >> a;
+            cin >> Input;
         }
     } while (test == false);
 
-    switch (a)
+    switch (Input)
     {
     case 'a':
     {
-        string acc;
         cout << "\n\n• Loan Scheme: Startup Loan.";
         cout << "\n• Interest: 6% compounded anually.";
         cout << "\n• Time Period: Strictly three years.";
         cout << "\n• Penalty: No Penalty for the first three years according to Startup India Initiative.";
         cout << "\n• Formalities Required: Your business documents.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
-        cin >> a;
-        if (confirm(a) == 'n' || confirm(a) == 'N')
+        cin >> Input;
+        if (Confirm(Input) == 'n' || Confirm(Input) == 'N')
         {
-            loan();
+            Loan();
         }
-        else if (confirm(a) == 'y' || confirm(a) == 'Y')
+        else if (Confirm(Input) == 'y' || Confirm(Input) == 'Y')
         {
-            long num = 0;
             double amt;
             cout << "\n\nEnter your account number: ";
-            cin >> num;
-            valid_acc_num(num);
+            cin >> AccountNumber;
+            ValidAccNum(AccountNumber);
             cout << "\nEnter the amount of loan: ";
             cin >> amt;
             cout << "\nAmount to be paid back within 3 years: Rs. " << amt * pow(1.06, 3);
-            cout << "\n-> Press ['Y'] to confirm OR ['N'] to cancel, cancelling will shift you to the homescreen: ";
-            cin >> a;
-            if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
+            cout << "\n-> Press ['Y'] to Confirm OR ['N'] to cancel, cancelling will shift you to the homescreen: ";
+            cin >> Input;
+            if ((Confirm(Input) == 'y') || (Confirm(Input) == 'Y'))
             {
                 cout << "\nLoan of Rs. " << amt << " transferred to your account!";
             }
             else
             {
                 cout << "\n\nShifting you to the homescreen.";
-                home_screen();
+                HomeScreen();
             }
         }
         else
         {
             cout << "\n\nShifting you to the homescreen.";
-            home_screen();
+            HomeScreen();
         }
 
         break;
@@ -325,88 +331,84 @@ void loan()
 
     case 'b':
     {
-        string acc;
         cout << "\n\n• Loan Scheme: Girl Education.";
         cout << "\n• Interest: No Interest.";
         cout << "\n• Time Period: Five years.";
         cout << "\n• Penalty: No Penalty.";
         cout << "\n• Formalities Required: Your aaadhar card and school documents.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
-        cin >> a;
-        if (confirm(a) == 'n' || confirm(a) == 'N')
+        cin >> Input;
+        if (Confirm(Input) == 'n' || Confirm(Input) == 'N')
         {
-            loan();
+            Loan();
         }
-        else if (confirm(a) == 'y' || confirm(a) == 'Y')
+        else if (Confirm(Input) == 'y' || Confirm(Input) == 'Y')
         {
-            long num = 0;
             double amt;
             cout << "\n\nEnter your account number: ";
-            cin >> num;
-            valid_acc_num(num);
+            cin >> AccountNumber;
+            ValidAccNum(AccountNumber);
             cout << "\nEnter the amount of loan: ";
             cin >> amt;
             cout << "\nAmount to be paid back within 5 years: Rs. " << amt;
             cout << "\n-> Press ['Y'] to confirm OR ['N'] to cancel, cancelling will shift you to the homescreen: ";
-            cin >> a;
-            if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
+            cin >> Input;
+            if ((Confirm(Input) == 'y') || (Confirm(Input) == 'Y'))
             {
                 cout << "\nLoan of Rs. " << amt << " transferred to your account!";
             }
             else
             {
                 cout << "\n\nShifting you to the homescreen.";
-                home_screen();
+                HomeScreen();
             }
         }
         else
         {
             cout << "\n\nShifting you to the homescreen.";
-            home_screen();
+            HomeScreen();
         }
         break;
     }
 
     case 'c':
     {
-        string acc;
         cout << "\n\n• Loan Scheme: Farmers Loan.";
         cout << "\n• Interest: 4.5% Simple interest.";
         cout << "\n• Time Period: Two years.";
         cout << "\n• Penalty: No Penalty.";
         cout << "\n• Formalities Required: Your land documents and PAN/aaadhar card.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
-        cin >> a;
-        if (confirm(a) == 'n' || confirm(a) == 'N')
+        cin >> Input;
+        if (Confirm(Input) == 'n' || Confirm(Input) == 'N')
         {
-            loan();
+            Loan();
         }
-        else if (confirm(a) == 'y' || confirm(a) == 'Y')
+        else if (Confirm(Input) == 'y' || Confirm(Input) == 'Y')
         {
-            long num = 0;
             double amt;
             cout << "\n\nEnter your account number: ";
-            cin >> num;
-            valid_acc_num(num);
+            cin >> AccountNumber;
+            ValidAccNum(AccountNumber);
             cout << "\nEnter the amount of loan: ";
             cin >> amt;
             cout << "\nAmount to be paid back within 2 years: Rs. " << amt + ((amt * 4.5 * 2) / 100);
             cout << "\n-> Press ['Y'] to confirm OR ['N'] to cancel, cancelling will shift you to the homescreen: ";
-            cin >> a;
-            if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
+            cin >> Input;
+            if ((Confirm(Input) == 'y') || (Confirm(Input) == 'Y'))
             {
                 cout << "\nLoan of Rs. " << amt << " transferred to your account!";
             }
             else
             {
                 cout << "\n\nShifting you to the homescreen.";
-                home_screen();
+                HomeScreen();
             }
         }
         else
         {
             cout << "\n\nShifting you to the homescreen.";
-            home_screen();
+            HomeScreen();
         }
 
         break;
@@ -415,56 +417,54 @@ void loan()
     case 'd':
     {
         int years = 0;
-        int counter = 0;
         cout << "Enter the time period of the loan (in years): ";
         cin >> years;
         do
         {
-            if (counter > 0)
+            if (Counter > 0)
             {
                 cout << "Sorry! The time period exceeded the limit of 8 years, please re-enter: ";
                 cin >> years;
             }
-            counter++;
+            Counter++;
         } while (years > 8);
-        string acc;
+        Counter = 0;
         cout << "\n\n• Loan Scheme: Citizens Loan.";
         cout << "\n• Interest: 8% compound interest.";
         cout << "\n• Time Period: " << years << " years.";
         cout << "\n• Penalty: Property will be mortgaged.";
         cout << "\n• Formalities Required: PAN/aaadhar card.";
         cout << "\n\n-> Do you agree with the above terms? Press ['Y'] for Yes OR ['N'] for No OR ['H'] to go back to the home screen: ";
-        cin >> a;
-        if (confirm(a) == 'n' || confirm(a) == 'N')
+        cin >> Input;
+        if (Confirm(Input) == 'n' || Confirm(Input) == 'N')
         {
-            loan();
+            Loan();
         }
-        else if (confirm(a) == 'y' || confirm(a) == 'Y')
+        else if (Confirm(Input) == 'y' || Confirm(Input) == 'Y')
         {
-            long num = 0;
             double amt;
             cout << "\n\nEnter your account number: ";
-            cin >> num;
-            valid_acc_num(num);
+            cin >> AccountNumber;
+            ValidAccNum(AccountNumber);
             cout << "\nEnter the amount of loan: ";
             cin >> amt;
             cout << "\nAmount to be paid back within 2 years: Rs. " << amt * pow(1.08, years);
             cout << "\n-> Press ['Y'] to confirm OR ['N'] to cancel, cancelling will shift you to the homescreen: ";
-            cin >> a;
-            if ((confirm(a) == 'y') || (confirm(a) == 'Y'))
+            cin >> Input;
+            if ((Confirm(Input) == 'y') || (Confirm(Input) == 'Y'))
             {
                 cout << "\nLoan of Rs. " << amt << " transferred to your account!";
             }
             else
             {
                 cout << "\n\nShifting you to the homescreen.";
-                home_screen();
+                HomeScreen();
             }
         }
         else
         {
             cout << "\n\nShifting you to the homescreen.";
-            home_screen();
+            HomeScreen();
         }
         break;
 
@@ -473,25 +473,24 @@ void loan()
 
     default:
         cout << "\nSomething looks wrong. We're shifting you to the homescreen.";
-        home_screen();
+        HomeScreen();
     }
 
     cout << "\n\n\nPress ['H'] to go back to the home screen OR ['A'] to load the screen again: ";
-    cin >> a;
-    if (checker(a) == 'A' || checker(a) == 'a')
+    cin >> Input;
+    if (BackCheck(Input) == 'A' || BackCheck(Input) == 'a')
     {
-        loan();
+        Loan();
     }
     else
     {
-        home_screen();
+        HomeScreen();
     }
 }
 
 void Care()
 {
     bool test = true;
-    char a;
     system("clear");
     cout << "\n\n4. Customer Care, Support and Helpdesk: ";
     cout << "\na) Account issues.";
@@ -499,23 +498,23 @@ void Care()
     cout << "\nc) Net banking issues.";
     cout << "\nd) Other support.";
     cout << "\n\n-> Please enter your choice between 'a', 'b', 'c' or 'd' OR Press ['H'] to go back to the home screen: ";
-    cin >> a;
-    if (a == 'h' || a == 'H')
+    cin >> Input;
+    if (Input == 'h' || Input == 'H')
     {
-        home_screen();
+        HomeScreen();
     }
 
     do
     {
-        test = (a >= 'a' && a <= 'd') ? true : false;
+        test = (Input >= 'a' && Input <= 'd') ? true : false;
         if (test == false)
         {
             cout << "\nRe-enter your choice between 'a' to 'd': ";
-            cin >> a;
+            cin >> Input;
         }
     } while (test == false);
 
-    switch (a)
+    switch (Input)
     {
     case 'a':
     {
@@ -539,25 +538,24 @@ void Care()
     }
     default:
         cout << "Something looks wrong.";
-        home_screen();
+        HomeScreen();
     }
 
     cout << "\n\n\nPress ['H'] to go back to the home screen OR ['A'] to load the screen again: ";
-    cin >> a;
-    if (checker(a) == 'A' || checker(a) == 'a')
+    cin >> Input;
+    if (BackCheck(Input) == 'A' || BackCheck(Input) == 'a')
     {
         Care();
     }
     else
     {
-        home_screen();
+        HomeScreen();
     }
 }
 
 void Transaction()
 {
     bool test = true;
-    char a;
     system("clear");
     cout << "2. Transaction Services:";
     cout << "\na) Fund transfer to one of your own accounts.";
@@ -565,135 +563,132 @@ void Transaction()
     cout << "\nc) Fund transfer to another account of different bank - Inter Banking Transfer.";
 
     cout << "\n\n-> Please enter your choice between 'a', 'b' or 'c' OR Press ['H'] to go back to the home screen: ";
-    cin >> a;
-    if (a == 'h' || a == 'H')
+    cin >> Input;
+    if (Input == 'h' || Input == 'H')
     {
-        home_screen();
+        HomeScreen();
     }
 
     do
     {
-        test = (a >= 'a' && a <= 'c') ? true : false;
+        test = (Input >= 'a' && Input <= 'c') ? true : false;
         if (test == false)
         {
             cout << "\nRe-enter your choice between 'a' to 'c': ";
-            cin >> a;
+            cin >> Input;
         }
     } while (test == false);
 
-    switch (a)
+    switch (Input)
     {
     case 'a':
     {
         int amt;
-        long num = 0;
         cout << "\n-> Enter your account number: ";
-        cin >> num;
-        valid_acc_num(num);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\n-> Enter the account number of one of your own account: ";
-        cin >> num;
-        valid_acc_num(num);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\n-> Enter the amount you wish to transfer: ";
         cin >> amt;
-        cout << "Amount of Rs. " << amt << " transferred to " << num << ".";
+        cout << "Amount of Rs. " << amt << " transferred to " << AccountNumber << ".";
         break;
     }
     case 'b':
     {
         int amt;
-        long num = 0;
         cout << "\n-> Enter your account number: ";
-        cin >> num;
-        valid_acc_num(num);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\n-> Enter the account number of the same bank you wish to transfer money: ";
-        cin >> num;
-        valid_acc_num(num);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\n-> Enter the amount you wish to transfer: ";
         cin >> amt;
-        cout << "Amount of Rs. " << amt << " transferred to " << num << ".";
+        cout << "Amount of Rs. " << amt << " transferred to " << AccountNumber << ".";
         break;
     }
     case 'c':
     {
         int amt;
-        long num = 0;
         cout << "\n-> Enter your account number: ";
-        cin >> num;
-        valid_acc_num(num);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\n-> Enter the account number of the different bank you wish to transfer money: ";
-        cin >> num;
-        valid_acc_num(num);
+        cin >> AccountNumber;
+        ValidAccNum(AccountNumber);
         cout << "\n-> Enter the amount you wish to transfer: ";
         cin >> amt;
-        cout << "Amount of Rs. " << amt << " transferred to " << num << ".";
+        cout << "Amount of Rs. " << amt << " transferred to " << AccountNumber << ".";
         break;
     }
     default:
         cout << "Something looks wrong.";
-        home_screen();
+        HomeScreen();
     }
 
     cout << "\n\n\nPress ['H'] to go back to the home screen OR ['A'] to load the screen again: ";
-    cin >> a;
-    if (checker(a) == 'A' || checker(a) == 'a')
+    cin >> Input;
+    if (BackCheck(Input) == 'A' || BackCheck(Input) == 'a')
     {
         Transaction();
     }
     else
     {
-        home_screen();
+        HomeScreen();
     }
 }
 
-char checker(char a)
+char BackCheck(char GetInput)
 {
-    int count = 0;
     do
     {
-        if (count > 0)
+        if (Counter > 0)
         {
             cout << "\nSorry, Wrong Input Received! Press ['H'] to go back to the home screen OR ['A'] to load the screen again: ";
-            cin >> a;
+            cin >> GetInput;
         }
-        count++;
-    } while ((a != 'a' && a != 'A') && (a != 'h' && a != 'H'));
-    return a;
+        Counter++;
+    } while ((GetInput != 'a' && GetInput != 'A') && (GetInput != 'h' && GetInput != 'H'));
+    Counter = 0;
+    return GetInput;
 }
 
-void valid_acc_num(long a)
+void ValidAccNum(long GetAccNum)
 {
     int digit = 0;
     do
     {
-        while (a > 0)
+        while (GetAccNum > 0)
         {
-            a = (a / 10);
+            GetAccNum = (GetAccNum / 10);
             digit++;
         }
         if (digit < 10)
         {
             cout << "\nYour Input must be *EXACTLY* 10 numerals long otherwise you'll be severely punished with a System crash: ";
-            cin >> a;
+            cin >> GetAccNum;
         }
     } while (digit < 10);
 }
 
-char confirm(char a)
+char Confirm(char GetInput)
 {
-    int count = 0;
     do
     {
-        if (count > 0)
+        if (Counter > 0)
         {
             cout << "\nSorry, Wrong Input Received!: ";
-            cin >> a;
+            cin >> GetInput;
         }
-        count++;
-    } while ((a != 'y' && a != 'Y') && (a != 'n' && a != 'N') && (a != 'q' && a != 'Q') && (a != 'h' && a != 'H'));
-    return a;
+        Counter++;
+    } while ((GetInput != 'y' && GetInput != 'Y') && (GetInput != 'n' && GetInput != 'N') && (GetInput != 'q' && GetInput != 'Q') && (GetInput != 'h' && GetInput != 'H'));
+    Counter = 0;
+    return GetInput;
 }
 
-int random_num()
+int RandomBalance()
 {
     int no_of_nums = 100000;
     int first_num = 1000;
