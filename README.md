@@ -1,10 +1,3 @@
 # School Project - Banking Applications.
 
-This is a simple banking application for a school project.
-
-TO DO's; 
-- [ ] Refactor the whole source code.                          
-- [ ] Document the code.                                            
-- [ ] Resolve homescreen bug.                                                 
-- [ ] Changing the whole Input mechanism.                                  
-- [ ] Add password protection in transactions.                               
+This is a simple and minimalistic banking application for a school project. To see the tasks undergoing, please visit the [Projects page](https://www.google.com "Projects page").
