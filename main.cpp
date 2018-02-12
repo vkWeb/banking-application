@@ -163,6 +163,7 @@ void Customer()
         cout << "• To open a bank account you'll need to provide your name, age, date of birth and aadhar card details.";
         cout << "\n-> Enter your name: ";
         getline(cin, name);
+        getline(cin, name);
         cout << "\n-> Enter your age: ";
         cin >> Input;
         cout << "\n-> Enter your DOB: ";
